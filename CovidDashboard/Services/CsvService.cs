@@ -12,7 +12,7 @@ public class CsvService: IHostedService
     public Task StartAsync(CancellationToken cancellationToken)
     {
         Console.WriteLine("StartAsync");
-        return new Task(ParseFiles, cancellationToken);
+        return Task.Run(ParseFiles, cancellationToken);
     }
 
     public Task StopAsync(CancellationToken cancellationToken)
@@ -24,5 +24,6 @@ public class CsvService: IHostedService
     {
         Console.WriteLine("ParseFiles");
         covidService.ParseTimeline();
+        covidService.ParseAgeGroup();
     }
 }

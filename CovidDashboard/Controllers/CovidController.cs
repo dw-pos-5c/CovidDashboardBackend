@@ -8,7 +8,7 @@ namespace CovidDashboard.Controllers;
 [ApiController]
 [Route("[controller]")]
 [Authorize]
-public class CovidController
+public class CovidController : ControllerBase
 {
     private readonly CovidService covidService;
 
@@ -18,8 +18,30 @@ public class CovidController
     }
 
     [HttpGet]
+    [AllowAnonymous]
     public IActionResult GetTimeline()
     {
-        return new OkObjectResult(covidService.GetTimeline());
+        return Ok(covidService.GetTimeline());
+    }
+
+    [HttpGet("daily")]
+    [AllowAnonymous]
+    public IActionResult GetTimelineDaily()
+    {
+        return Ok(covidService.GetTimelineDaily());
+    }
+
+    [HttpGet("agegroup")]
+    [AllowAnonymous]
+    public IActionResult GetAgeGroup()
+    {
+        return Ok(covidService.GetAgeGroup());
+    }
+
+    [HttpGet("agegroup-gendered")]
+    [AllowAnonymous]
+    public IActionResult GetAgeGroupGendered()
+    {
+        return Ok(covidService.GetAgegroupGendered());
     }
 }
