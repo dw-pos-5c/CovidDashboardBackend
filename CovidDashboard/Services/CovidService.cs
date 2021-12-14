@@ -25,7 +25,6 @@ public class CovidService
             if (labels.Contains(x.Date.ToString("dd.MM.yyyy"))
                 || !x.County.Equals("Österreich"))
             {
-                Console.WriteLine(x.Date.ToString());
                 return;
             }
 
@@ -39,6 +38,68 @@ public class CovidService
             Datasets = new List<Group> { group },
         };
     }
+    public TimelineDailyDTO GetDailyDeaths()
+    {
+        var labels = new List<string>();
+        var group = new Group();
+        group.Data = new List<int>();
+        group.Label = "Daily Cases";
+
+        timelines.ForEach(x =>
+        {
+            if (labels.Contains(x.Date.ToString("dd.MM.yyyy"))
+                || !x.County.Equals("Österreich"))
+            {
+                return;
+            }
+
+            labels.Add(x.Date.ToString("dd.MM.yyyy"));
+            group.Data.Add(x.DeathDaily);
+        });
+
+        return new TimelineDailyDTO
+        {
+            Labels = labels,
+            Datasets = new List<Group> { group },
+        };
+    }
+
+    public TimelineDailyDTO GetDailyCasesCounty()
+    {
+        var labels = new List<string>();
+        var groups = new List<Group>();
+
+        timelines.ForEach(x =>
+        {
+            if (x.County.Equals("Österreich")) return;
+            
+            if (!labels.Contains(x.Date.ToString("dd.MM.yyyy")))
+            {
+                labels.Add(x.Date.ToString("dd.MM.yyyy"));
+            }
+
+            var existingGroup = groups.Find(group => group.Label.Equals(x.County));
+            if (existingGroup == null)
+            {
+                groups.Add(new Group
+                {
+                    Label = x.County,
+                    Data = new List<int> { x.CasesDaily },
+                });
+            } 
+            else
+            {
+                existingGroup.Data.Add(x.CasesDaily);
+            }
+        });
+
+        return new TimelineDailyDTO
+        {
+            Labels = labels,
+            Datasets = groups,
+        };
+    }
+
     public AgeGroupDTO GetAgeGroup()
     {
         var labels = new List<string>();
@@ -122,6 +183,40 @@ public class CovidService
             Datasets = new List<Group>
             {
                 groupM, groupF,
+            }
+        };
+    }
+    public AgeGroupDTO GetDeathsGendered()
+    {
+        var labels = new List<string> { "Male", "Female"};
+        var group = new Group();
+        group.Data = new List<int> { 0, 0};
+
+        var latestDate = agegroups[^1].Date;
+
+        agegroups.ForEach(x =>
+        {
+            if (!x.County.Equals("Österreich") || !x.Date.Equals(latestDate))
+            {
+                return;
+            }
+
+            if (x.Gender.Equals("M"))
+            {
+                group.Data[0] += x.Count;
+            }
+            else
+            {
+                group.Data[1] += x.Count;
+            }
+        });
+
+        return new AgeGroupDTO
+        {
+            Labels = labels,
+            Datasets = new List<Group>
+            {
+                group
             }
         };
     }

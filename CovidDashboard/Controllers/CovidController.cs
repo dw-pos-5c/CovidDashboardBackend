@@ -17,6 +17,24 @@ public class CovidController : ControllerBase
         this.covidService = covidService;
     }
 
+    [HttpGet("agegroup-gendered")]
+    public IActionResult GetAgeGroupGendered()
+    {
+        return Ok(covidService.GetAgegroupGendered());
+    }
+
+    [HttpGet("daily-deaths")]
+    public IActionResult GetDailyDeaths()
+    {
+        return Ok(covidService.GetDailyDeaths());
+    }
+
+    [HttpGet("daily-county")]
+    public IActionResult GetDailyCasesCounty()
+    {
+        return Ok(covidService.GetDailyCasesCounty());
+    }
+
     [HttpGet]
     [AllowAnonymous]
     public IActionResult GetTimeline()
@@ -38,10 +56,10 @@ public class CovidController : ControllerBase
         return Ok(covidService.GetAgeGroup());
     }
 
-    [HttpGet("agegroup-gendered")]
+    [HttpGet("deaths-gendered")]
     [AllowAnonymous]
-    public IActionResult GetAgeGroupGendered()
+    public IActionResult GetDeathsGendered()
     {
-        return Ok(covidService.GetAgegroupGendered());
+        return Ok(covidService.GetDeathsGendered());
     }
 }

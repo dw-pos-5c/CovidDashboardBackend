@@ -28,6 +28,7 @@ public class AuthController : ControllerBase
     [HttpGet("{password}")]
     public IActionResult Login(string password)
     {
+        Console.WriteLine(appSettings.Secret);
         var result = new AuthDTO
         {
             Success = false,

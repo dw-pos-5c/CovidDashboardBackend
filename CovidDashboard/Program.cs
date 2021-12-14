@@ -25,6 +25,7 @@ var appSettings = appSettingsSection.Get<AppSettings>();
 // JWT
 
 var key = Encoding.ASCII.GetBytes(appSettings.Secret);
+Console.WriteLine(appSettings.Secret);
 builder.Services.AddAuthentication(x =>
 {
     x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -58,11 +59,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseCors(options => options.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
-
-app.UseAuthorization();
+app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
 app.UseAuthentication();
+
+app.UseAuthorization();
 
 app.MapControllers();
 
