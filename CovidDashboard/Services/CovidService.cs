@@ -16,7 +16,9 @@ public class CovidService
     public TimelineDailyDTO GetTimelineDaily()
     {
         var labels = new List<string>();
-        var data = new List<int>();
+        var group = new Group();
+        group.Data = new List<int>();
+        group.Label = "Daily Cases";
 
         timelines.ForEach(x =>
         {
@@ -28,13 +30,13 @@ public class CovidService
             }
 
             labels.Add(x.Date.ToString("dd.MM.yyyy"));
-            data.Add(x.CasesDaily);
+            group.Data.Add(x.CasesDaily);
         });
 
         return new TimelineDailyDTO
         {
             Labels = labels,
-            Data = data,
+            Datasets = new List<Group> { group },
         };
     }
     public AgeGroupDTO GetAgeGroup()
@@ -58,6 +60,7 @@ public class CovidService
                 if (index >= 0)
                 {
                     group.Data[index] += x.Count;
+                    return;
                 }
             } 
             else
